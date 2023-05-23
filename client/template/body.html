@@ -1,0 +1,81 @@
+{{ template "header.html" }}
+<div class="content">
+  <div class="amount-info">
+    <label for="">Amount</label>
+    <input id="amount-input" type="text" placeholder="1">
+  </div>
+
+  <div class="coin-info">
+    <label for="">From</label>
+    <select name="coin-type" id="coin-type">
+      <option value="real">Real</option>
+      <option value="dollar">Dollar</option>
+    </select>
+  </div>
+
+  <button class="btn-submit" type="submit">Convert</button>
+  
+  <div class="result">
+    <input type="hidden" disabled value={{.Dollar}} id="dollarValue">
+    <input type="hidden" disabled value={{.Real}} id="realValue">
+    <p class="result-from">{{ .Coin }} =</p>
+    <h3 class="result-to">{{ .CoinValue }}</h3>
+  </div>
+</div>
+{{ template "footer.html" }}
+<script>
+  addEventListener('load', () => {
+    const getNumberFromString = (str) => Number(Number(str.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g).join('')).toFixed(2));
+    const getDollarAndRealAsNumber = () => {
+      const dollar = document.querySelector("#dollarValue").value;
+      const real = document.querySelector("#realValue").value
+      
+      const dollarAsNumber = getNumberFromString(dollar)
+      const realAsNumber = getNumberFromString(real)
+
+      return {
+        dollar: dollarAsNumber,
+        real: realAsNumber,
+      };
+    }
+
+    const button = document.querySelector('.btn-submit')
+    button.addEventListener('click', () => {
+      let amount = document.querySelector('#amount-input').value;
+
+      if (!amount) {
+        alert("Amount must be provided.");
+        return;
+      }
+
+      amount = getNumberFromString(amount);
+      const coinType = document.querySelector('#coin-type').value;
+  
+      const {
+        dollar,
+        real,
+      } = getDollarAndRealAsNumber();
+
+      let resultFromMessage;
+      let resultToMessage;
+
+      if (coinType.toUpperCase() === 'REAL') {
+        const value = (amount * dollar).toFixed(2);
+
+        resultFromMessage = `${amount} Brazilian Reais`;
+        resultToMessage = `${value} US Dollar`;
+      } else {
+        const value = (amount / dollar).toFixed(2);
+
+        resultFromMessage = `${amount} US Dollar`;
+        resultToMessage = `${value} Brazilian Reais`;
+      }
+
+      const resultFrom = document.querySelector('.result-from');
+      const resultTo = document.querySelector('.result-to');
+
+      resultFrom.innerHTML = resultFromMessage + ' =';
+      resultTo.innerHTML = resultToMessage;
+    });
+  });
+</script>
