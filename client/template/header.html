@@ -7,32 +7,27 @@
   <title>Go_Expert - FullCycle</title>
 
   <style>
-    @import url(http://weloveiconfonts.com/api/?family=entypo);
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      color: #fff;
+    }
+
+    header, button, footer {
+      background-color: #303030;
     }
   
-    header {
-      background-color: #303030;
-      color: #fff;
+    header {      
       display: flex;
       justify-content: center;
+      align-items: center;
+      padding: 5px;
       height: 8vh;
       width: 100vw;
     }
   
-    .header_info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 5px;
-      margin-top: 10px;
-    }
-  
-    .header_info > h1:hover {
+    header > h1:hover {
       text-decoration: underline;
       text-decoration-color: #ffcd00;
       text-underline-offset: 2px;
@@ -42,7 +37,6 @@
       background-color: #1c1c1c;
       height: 87vh;
       width: 100vw;
-      color: #fff;
     }
   
     .content {
@@ -64,8 +58,7 @@
     }
   
     input, select {
-      background-color: rgba(255, 205, 0, 1);
-      color: #fff;
+      background-color: #ffcd00;
     }
   
     label {
@@ -99,9 +92,7 @@
     }
   
     button {
-      font-size: 22px;
-      background-color: #303030;
-      color: #fff;
+      font-size: 22px;      
       margin-top: 10px;
       border-radius: 20px;
       height: 40px;
@@ -115,8 +106,7 @@
     footer {
       display: flex;
       align-items: center;
-      justify-content: center;
-      background-color: #303030;
+      justify-content: center;      
       height: 5vh;
       width: 100vw;
       position: fixed;
@@ -135,7 +125,5 @@
 </head>
 <body>
   <header>
-    <div class="header_info">
-      <h1>Go Expert Course - Challenge 01</h1>
-    </div>
+    <h1>Go Expert Course - Challenge 01</h1>
   </header>
