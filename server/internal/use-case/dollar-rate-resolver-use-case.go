@@ -9,11 +9,15 @@ import (
 )
 
 func DollarRateResolverUseCase() (*entity.DollarRateResponseEntity, error) {
-	dollarRate := adapter.DollarRateAdapter()
+	dollarRate, err := adapter.DollarRateAdapter()
+
+	if err != nil {
+		return nil, err
+	}
 
 	var dollarRateEntity entity.DollarRateEntity
 
-	err := json.Unmarshal(dollarRate, &dollarRateEntity)
+	err = json.Unmarshal(dollarRate, &dollarRateEntity)
 
 	if err != nil {
 		return nil, err

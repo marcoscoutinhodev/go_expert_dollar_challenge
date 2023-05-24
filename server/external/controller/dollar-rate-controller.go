@@ -31,8 +31,8 @@ func DollarRateController(w http.ResponseWriter, r *http.Request) {
 	dollarRateResponseEntity, err := use_case.DollarRateResolverUseCase()
 
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(&ErrorHelper{Error: err.Error()})
 		return
 	}
 

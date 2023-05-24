@@ -23,6 +23,9 @@ type Convertion struct {
 	Dollar    float64
 	Real      float64
 }
+type ErrorHelper struct {
+	Error string `json:"error"`
+}
 
 func main() {
 	http.HandleFunc("/home", home)
@@ -58,25 +61,36 @@ func home(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintln("internal server error, please try again..")))
+		return
 	}
 
 	res, err := http.DefaultClient.Do(req)
 
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintln("internal server error, please try again..")))
+		return
 	}
 
 	defer res.Body.Close()
 
-	if res.StatusCode != 200 {
-		panic(err)
-	}
-
 	body, err := io.ReadAll(res.Body)
 
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintln("internal server error, please try again..")))
+		return
+	}
+
+	if res.StatusCode != 200 {
+		var errorHelper ErrorHelper
+		json.Unmarshal(body, &errorHelper)
+		fmt.Printf("error on request to http://localhost:4001/dollar_value | Status code: %d  | Message: %s\n", res.StatusCode, errorHelper.Error)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintln("internal server error, please try again..")))
+		return
 	}
 
 	var serverResponse ServerResponse
@@ -84,19 +98,25 @@ func home(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &serverResponse)
 
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintln("internal server error, please try again..")))
+		return
 	}
 
 	dollar, err := strconv.ParseFloat(fmt.Sprintf(serverResponse.Dollar), 64)
 
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintln("internal server error, please try again..")))
+		return
 	}
 
 	file, err := os.OpenFile("history.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
-		panic(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintln("internal server error, please try again..")))
+		return
 	}
 
 	defer file.Close()
